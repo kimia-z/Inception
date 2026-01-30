@@ -13,4 +13,6 @@ if ( !defined('ABSPATH' ) ) {
 define('ABSPATH',__DIR__ .'/' );
 }
 
+$table_prefix = 'wp_';  // <-- ADD THIS LINE
+
 require_once ABSPATH .'wp-settings.php';
