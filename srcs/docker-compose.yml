@@ -36,13 +36,13 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /Users/kimiaziari/dockervols/mariadb
+      device: /home/kziari/data
   wordpress_data:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /Users/kimiaziari/dockervols/wordpress
+      device: /home/kziari/data
 
 networks:
   inception_net:

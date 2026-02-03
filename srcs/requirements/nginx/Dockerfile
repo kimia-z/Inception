@@ -11,7 +11,7 @@ RUN openssl req -x509 -nodes -days 365 \
 	-newkey rsa:2048 \
 	-keyout /etc/ssl/inception/inception.key \
 	-out /etc/ssl/inception/inception.crt \
-	-subj "/C=NL/ST=Noord-Holland/L=Amsterdam/O=42/OU=Codam/CN=localhost"
+	-subj "/CN=${DOMAIN_NAME}"
 
 COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 
