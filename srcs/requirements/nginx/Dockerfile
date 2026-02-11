@@ -1,19 +1,20 @@
 FROM debian:bullseye
 
-RUN apt-get update && apt-get install -y \
-	nginx \
-	openssl \
-	&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y nginx openssl && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /etc/ssl/inception
+RUN mkdir -p /etc/nginx/ssl
 
-RUN openssl req -x509 -nodes -days 365 \
-	-newkey rsa:2048 \
-	-keyout /etc/ssl/inception/inception.key \
-	-out /etc/ssl/inception/inception.crt \
-	-subj "/CN=${DOMAIN_NAME}"
+RUN openssl req -x509 -nodes \
+    -days 365 \
+    -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/inception.key \
+    -out /etc/nginx/ssl/inception.crt \
+    -subj "/CN=inception"
 
-COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
+COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 443
 

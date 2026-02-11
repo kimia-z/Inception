@@ -1,49 +1,53 @@
 services:
   nginx:
+    container_name: nginx
     build: ./requirements/nginx
     ports:
       - "443:443"
     depends_on:
       - wordpress
     restart: always
+    image: nginx:notlatest
+    env_file: .env
     volumes:
-      - wordpress_data:/var/www/html
-      - ./requirements/nginx/conf:/etc/nginx/conf.d
+      - wordpress_data:/var/www/wordpress
     networks:
-      - inception_net
+      - inception
 
   wordpress:
+    container_name: wordpress
     build: ./requirements/wordpress
+    expose:
+      - "9000"
     depends_on:
       - mariadb
+    image: wordpress:notlatest
+    env_file: .env
     restart: always
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/wordpress
     networks:
-      - inception_net
+      - inception
 
   mariadb:
+    container_name: mariadb
     build: ./requirements/mariadb
+    expose:
+      - "3306"
     restart: always
+    image: mariadb:notlatest
+    env_file: .env
     volumes:
       - mariadb_data:/var/lib/mysql
     networks:
-      - inception_net
+      - inception
 
 volumes:
   mariadb_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/kziari/data
+    name: mariadb_data
   wordpress_data:
-    driver: local
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/kziari/data
+    name: wordpress_data
 
 networks:
-  inception_net:
+  inception:
     driver: bridge

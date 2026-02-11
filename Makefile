@@ -3,7 +3,9 @@ NAME = inception
 COMPOSE = docker-compose
 SRC = srcs/docker-compose.yml
 
+*************
 DATA_DIR = /Users/kimiaziari/dockervols
+*************
 
 all: build up
 
