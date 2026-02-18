@@ -11,7 +11,7 @@ chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql $DATADIR
 
 # Initialize database if not already initialized
-if [ ! -d "$DATADIR/mysql" ]; then
+if [ ! -d "$DATADIR" ]; then
     echo "Initializing database..."
 
     mysqld --initialize-insecure --user=mysql --datadir=$DATADIR

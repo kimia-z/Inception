@@ -17,6 +17,8 @@ services:
   wordpress:
     container_name: wordpress
     build: ./requirements/wordpress
+    secrets:
+      - db_password
     expose:
       - "9000"
     depends_on:
@@ -32,6 +34,9 @@ services:
   mariadb:
     container_name: mariadb
     build: ./requirements/mariadb
+    secrets:
+      - db_password
+      - db_root_password
     expose:
       - "3306"
     restart: always
@@ -41,6 +46,12 @@ services:
       - mariadb_data:/var/lib/mysql
     networks:
       - inception
+
+secrets:
+  db_password:
+    file: ./db_password.txt
+  db_root_password:
+    file: ./db_root_password.txt
 
 volumes:
   mariadb_data:
