@@ -1,41 +1,46 @@
 NAME = inception
 
-COMPOSE = docker-compose
-SRC = srcs/docker-compose.yml
+COMPOSE_FILE = ./srcs/docker-compose.yml
+ENV_FILE = ./srcs/.env
+HOME = kziari
 
-*************
-DATA_DIR = /Users/kimiaziari/dockervols
-*************
+all: checker folder up
 
-all: build up
+checker:
+	@if [ ! -f $(ENV_FILE) ]; then \
+		echo "Error: .env not found!"; \
+		exit 1; \
+	fi
 
-build:
-	$(COMPOSE) -f $(SRC) build
+
+folder:
+	@mkdir -p $(HOME)/data/mariadb
+	@mkdir -p $(HOME)/data/wordpress
+	@echo "--Data Folders Created--"
 
 up:
-	$(COMPOSE) -f $(SRC) up -d
+	@docker compose -f $(COMPOSE_FILE) up --build -d
 
 down:
-	$(COMPOSE) -f $(SRC) down
+	@docker compose -f $(COMPOSE_FILE) down
 
-stop:
-	$(COMPOSE) -f $(SRC) stop
 
-restart: down up
+clean: down
+	@docker system prune -af
+	@docker volume prune -f
+	@echo "Clean unused volumes and stopped containers!"
 
-logs:
-	$(COMPOSE) -f $(SRC) logs
+re: down up
+	@echo " UP UP DOWN DOWN, Elevator Operator! "
 
-ps:
-	$(COMPOSE) -f $(SRC) ps
+fclean: 
+	@docker system prune -af
+	@docker compose -f ${COMPOSE_FILE} down --volumes
+	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
+	@docker rmi -f $$(docker images -q) 2>/dev/null || true
+	@sudo rm -rf $(HOME)/data/mariadb
+	@sudo rm -rf $(HOME)/data/wordpress
+	@sudo rm -rf $(HOME)/data
+	@echo "--COMPLETE DELETION: volumes, images and directories were removed!"
 
-clean:
-	$(COMPOSE) -f $(SRC) down -v
-
-fclean: clean
-	rm -rf $(DATA_DIR)/mariadb/*
-	rm -rf $(DATA_DIR)/wordpress/*
-
-re: fclean all
-
-.PHONY: all build up down stop restart logs ps clean fclean re
+.PHONY: all checker folder up down clean re fclean
