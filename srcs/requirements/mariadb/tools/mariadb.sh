@@ -2,6 +2,8 @@
 set -e
 
 DATADIR="/var/lib/mysql"
+MYSQL_PASSWORD=$(cat /run/secrets/db_password)
+MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
 
 echo "Starting MariaDB setup..."
 
