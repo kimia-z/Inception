@@ -2,6 +2,11 @@
 
 set -e
 
+LOG_FILE=/var/log/wordpress_setup.log
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+echo "Starting WordPress setup..."
+
 mkdir -p /var/www/wordpress
 cd /var/www/wordpress
 
@@ -9,16 +14,14 @@ MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
-
-# Install WP-CLI
-curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-chmod +x wp-cli.phar
-mv wp-cli.phar /usr/local/bin/wp
-
 # Download WordPress if not already installed
-if [ ! -f wp-config.php ]; then
+if ! wp core is-installed --allow-root 2>/dev/null; then
+
+    echo "Starting core download..."
 
     wp core download --allow-root
+
+    echo "Starting config create..."
 
     wp config create \
         --dbname=$MYSQL_DATABASE \
@@ -44,4 +47,4 @@ fi
 
 mkdir -p /run/php
 
-exec php-fpm7.4 -F
+exec php-fpm8.2 -F

@@ -1,6 +1,9 @@
 #!/bin/bash
 set -e
 
+LOG_FILE=/var/log/mariadb_setup.log
+exec > >(tee -a "$LOG_FILE") 2>&1
+
 DATADIR="/var/lib/mysql"
 MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
@@ -13,10 +16,10 @@ chown -R mysql:mysql /run/mysqld
 chown -R mysql:mysql $DATADIR
 
 # Initialize database if not already initialized
-if [ ! -d "$DATADIR" ]; then
+if [ ! -d "$DATADIR/$MYSQL_DATABASE" ]; then
     echo "Initializing database..."
 
-    mysqld --initialize-insecure --user=mysql --datadir=$DATADIR
+    mysql_install_db --user=mysql --datadir=$DATADIR
 
     echo "Starting temporary MariaDB server..."
     mysqld --skip-networking --datadir=$DATADIR &
