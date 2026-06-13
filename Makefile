@@ -40,9 +40,9 @@ fclean:
 	@docker compose -f ${COMPOSE_FILE} down --volumes
 	@docker volume rm $$(docker volume ls -q) 2>/dev/null || true
 	@docker rmi -f $$(docker images -q) 2>/dev/null || true
-# 	@sudo rm -rf $(LOGIN)/data/mariadb
-# 	@sudo rm -rf $(LOGIN)/data/wordpress
-# 	@sudo rm -rf $(LOGIN)/data
+# 	@sudo rm -rf /home/$(LOGIN)/data/mariadb
+# 	@sudo rm -rf /home/$(LOGIN)/data/wordpress
+# 	@sudo rm -rf /home/$(LOGIN)/data
 	@sudo rm -rf /Users/kimiaziari/data/mariadb
 	@sudo rm -rf /Users/kimiaziari/data/wordpress
 	@sudo rm -rf /Users/kimiaziari/data
