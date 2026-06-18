@@ -1,3 +1,4 @@
 .env
 *.log
 .git
+.DS_Store
