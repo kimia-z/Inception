@@ -1,5 +1,4 @@
 # User Documentation
-
 ## Services provided by the stack
 
 This project runs a WordPress website behind an NGINX web server, with a MariaDB database storing all the site's content and users. Together they provide a fully working website, accessible securely over HTTPS.
@@ -57,7 +56,7 @@ All three containers — `nginx`, `wordpress`, and `mariadb` — should show sta
 
 **4. Confirm containers restart automatically after a crash:**
 ```bash
-docker kill mariadb     # simulate a crash
-docker ps               # wait a few seconds — mariadb should return to "Up"
+docker exec mariadb kill 1    # simulate a real crash (kills the main process)
+docker ps                     # wait a few seconds — mariadb returns to "Up"
 ```
-This confirms the restart policy is working — a crashed container comes back on its own.
+This confirms the `restart: always` policy works — a crashed container comes back on its own.
